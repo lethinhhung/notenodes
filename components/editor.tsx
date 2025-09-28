@@ -425,12 +425,50 @@ function KeyboardShortcutsPlugin() {
   return null;
 }
 
+function AutoSavePlugin() {
+  const [editor] = useLexicalComposerContext();
+
+  useEffect(() => {
+    const savedState = localStorage.getItem("editorState");
+    if (savedState) {
+      try {
+        const state = editor.parseEditorState(savedState);
+        editor.setEditorState(state);
+      } catch (error) {
+        console.error("Failed to load saved state:", error);
+      }
+    }
+
+    return editor.registerUpdateListener(({ editorState }) => {
+      const json = editorState.toJSON();
+      localStorage.setItem("editorState", JSON.stringify(json));
+    });
+  }, [editor]);
+
+  return null;
+}
+
 function onError(error: Error) {
   console.error(error);
 }
 
 export function Editor({ translations }: { translations: EditorTranslations }) {
   const [title, setTitle] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const savedTitle = localStorage.getItem("editorTitle");
+    if (savedTitle) {
+      setTitle(savedTitle);
+    }
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem("editorTitle", title);
+    }
+  }, [title, isLoaded]);
 
   const slashMenuItems = useMemo(() => createSlashMenuItems(translations), [translations]);
 
@@ -477,6 +515,7 @@ export function Editor({ translations }: { translations: EditorTranslations }) {
           <ListPlugin />
           <LinkPlugin />
           <KeyboardShortcutsPlugin />
+          <AutoSavePlugin />
           <SlashCommandPlugin slashMenuItems={slashMenuItems} />
           <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
         </div>
