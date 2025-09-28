@@ -31,10 +31,11 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params
+  const fontClasses = locale === 'vi' ? '' : `${geistSans.variable} ${geistMono.variable}`
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${fontClasses} antialiased`}
       >
         <ThemeProvider
           attribute="class"
