@@ -212,6 +212,15 @@ function SlashCommandPlugin({ slashMenuItems }: { slashMenuItems: SlashMenuItem[
     }
   }, [filteredItems.length, selectedIndex]);
 
+  const scrollToItem = useCallback((node: HTMLButtonElement | null) => {
+    if (node) {
+      node.scrollIntoView({
+        block: "nearest",
+        behavior: "smooth",
+      });
+    }
+  }, []);
+
   const closeMenu = useCallback(() => {
     setShowMenu(false);
     setQuery("");
@@ -363,6 +372,7 @@ function SlashCommandPlugin({ slashMenuItems }: { slashMenuItems: SlashMenuItem[
       {filteredItems.map((item, index) => (
         <button
           key={item.title}
+          ref={index === selectedIndex ? scrollToItem : null}
           className={`w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
             index === selectedIndex ? "bg-gray-100 dark:bg-gray-700" : ""
           }`}
