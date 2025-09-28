@@ -1,4 +1,5 @@
 import { ModeToggle } from "@/components/mode-toggle";
+import { LanguageToggle } from "@/components/language-toggle";
 import Image from "next/image";
 import { useTranslation } from "@/lib/i18n";
 
@@ -54,6 +55,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           >
             {t('readDocs')}
           </a>
+          <LanguageToggle />
           <ModeToggle />
         </div>
       </main>
