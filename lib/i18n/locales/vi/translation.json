@@ -37,6 +37,10 @@
       "codeBlock": {
         "title": "Khối mã",
         "description": "Ghi lại đoạn mã lập trình"
+      },
+      "inlineCode": {
+        "title": "Mã nội tuyến",
+        "description": "Định dạng mã nội tuyến"
       }
     }
   }

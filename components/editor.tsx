@@ -23,7 +23,7 @@ import {
 import { CodeNode, CodeHighlightNode, $createCodeNode } from "@lexical/code";
 import { LinkNode, AutoLinkNode } from "@lexical/link";
 import { TRANSFORMERS } from "@lexical/markdown";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   FORMAT_TEXT_COMMAND,
@@ -39,6 +39,7 @@ import {
   COMMAND_PRIORITY_HIGH,
   LexicalEditor,
   $isTextNode,
+  $createParagraphNode,
 } from "lexical";
 import { $setBlocksType } from "@lexical/selection";
 import type { EditorTranslations } from "@/lib/editor-translations";
@@ -200,6 +201,17 @@ function createSlashMenuItems(
         });
       },
     },
+    {
+      title: translations.slashMenu.inlineCode?.title || "Inline Code",
+      description:
+        translations.slashMenu.inlineCode?.description ||
+        "Inline code formatting",
+      keywords: ["inline", "code", "backtick", "monospace"],
+      icon: "`",
+      onSelect: (editor) => {
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
+      },
+    },
   ];
 }
 
@@ -213,6 +225,11 @@ function SlashCommandPlugin({
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  // Use refs to avoid stale closures
+  const selectedIndexRef = useRef(selectedIndex);
+  const filteredItemsRef = useRef<SlashMenuItem[]>([]);
 
   const filteredItems = slashMenuItems.filter((item) => {
     const searchStr = query.toLowerCase();
@@ -222,6 +239,15 @@ function SlashCommandPlugin({
       item.keywords.some((keyword) => keyword.includes(searchStr))
     );
   });
+
+  // Update refs when values change
+  useEffect(() => {
+    selectedIndexRef.current = selectedIndex;
+  }, [selectedIndex]);
+
+  useEffect(() => {
+    filteredItemsRef.current = filteredItems;
+  }, [filteredItems]);
 
   useEffect(() => {
     if (selectedIndex >= filteredItems.length) {
@@ -276,6 +302,7 @@ function SlashCommandPlugin({
     },
     [editor, filteredItems, closeMenu]
   );
+
 
   useEffect(() => {
     return editor.registerUpdateListener(({ editorState }) => {
@@ -335,7 +362,14 @@ function SlashCommandPlugin({
       KEY_ARROW_DOWN_COMMAND,
       (event) => {
         event.preventDefault();
-        setSelectedIndex((prev) => (prev + 1) % filteredItems.length);
+        setIsNavigating(true);
+        const itemsLength = filteredItemsRef.current.length;
+        if (itemsLength === 0) return true;
+
+        setSelectedIndex((prev) => {
+          const next = (prev + 1) % itemsLength;
+          return next;
+        });
         return true;
       },
       COMMAND_PRIORITY_HIGH
@@ -345,9 +379,14 @@ function SlashCommandPlugin({
       KEY_ARROW_UP_COMMAND,
       (event) => {
         event.preventDefault();
-        setSelectedIndex(
-          (prev) => (prev - 1 + filteredItems.length) % filteredItems.length
-        );
+        setIsNavigating(true);
+        const itemsLength = filteredItemsRef.current.length;
+        if (itemsLength === 0) return true;
+
+        setSelectedIndex((prev) => {
+          const next = (prev - 1 + itemsLength) % itemsLength;
+          return next;
+        });
         return true;
       },
       COMMAND_PRIORITY_HIGH
@@ -357,7 +396,11 @@ function SlashCommandPlugin({
       KEY_ENTER_COMMAND,
       (event) => {
         event?.preventDefault();
-        selectItem(selectedIndex);
+        const currentIndex = selectedIndexRef.current;
+        const items = filteredItemsRef.current;
+        if (items[currentIndex]) {
+          selectItem(currentIndex);
+        }
         return true;
       },
       COMMAND_PRIORITY_HIGH
@@ -378,14 +421,7 @@ function SlashCommandPlugin({
       removeEnter();
       removeEscape();
     };
-  }, [
-    showMenu,
-    selectedIndex,
-    filteredItems.length,
-    editor,
-    selectItem,
-    closeMenu,
-  ]);
+  }, [showMenu, editor, closeMenu, selectItem]);
 
   if (!showMenu || filteredItems.length === 0) {
     return null;
@@ -395,6 +431,7 @@ function SlashCommandPlugin({
     <div
       className="fixed z-50 w-[350px] overflow-hidden rounded-md border bg-popover p-0 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95"
       style={{ top: menuPosition.top, left: menuPosition.left }}
+      onMouseMove={() => setIsNavigating(false)}
     >
       <div className="max-h-[300px] overflow-y-auto overflow-x-hidden">
         <div className="overflow-hidden p-1">
@@ -405,10 +442,9 @@ function SlashCommandPlugin({
               className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors w-full ${
                 index === selectedIndex
                   ? "bg-accent text-accent-foreground"
-                  : "hover:bg-accent hover:text-accent-foreground"
+                  : !isNavigating ? "hover:bg-accent/50" : ""
               }`}
               onClick={() => selectItem(index)}
-              onMouseEnter={() => setSelectedIndex(index)}
             >
               <span className="flex h-5 w-5 items-center justify-center mr-2 text-sm font-medium">
                 {item.icon}
@@ -529,7 +565,7 @@ export function Editor({ translations }: { translations: EditorTranslations }) {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-16">
+    <div className="max-w-5xl mx-auto px-4 py-16 min-h-screen">
       <input
         type="text"
         value={title}

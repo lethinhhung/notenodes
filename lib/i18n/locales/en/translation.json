@@ -37,6 +37,10 @@
       "codeBlock": {
         "title": "Code Block",
         "description": "Capture a code snippet"
+      },
+      "inlineCode": {
+        "title": "Inline Code",
+        "description": "Inline code formatting"
       }
     }
   }
