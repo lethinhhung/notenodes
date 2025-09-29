@@ -8,8 +8,18 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
-import { HeadingNode, QuoteNode, $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
-import { ListNode, ListItemNode, INSERT_UNORDERED_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND } from "@lexical/list";
+import {
+  HeadingNode,
+  QuoteNode,
+  $createHeadingNode,
+  $createQuoteNode,
+} from "@lexical/rich-text";
+import {
+  ListNode,
+  ListItemNode,
+  INSERT_UNORDERED_LIST_COMMAND,
+  INSERT_ORDERED_LIST_COMMAND,
+} from "@lexical/list";
 import { CodeNode, CodeHighlightNode, $createCodeNode } from "@lexical/code";
 import { LinkNode, AutoLinkNode } from "@lexical/link";
 import { TRANSFORMERS } from "@lexical/markdown";
@@ -45,7 +55,8 @@ const theme = {
     ol: "list-decimal ml-5 mb-2",
     listitem: "mb-1",
   },
-  quote: "border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic my-4 text-gray-700 dark:text-gray-300",
+  quote:
+    "border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic my-4 text-gray-700 dark:text-gray-300",
   code: "bg-gray-100 dark:bg-gray-800 rounded px-1 py-0.5 font-mono text-sm",
   codeHighlight: {
     atrule: "text-blue-600",
@@ -97,7 +108,9 @@ interface SlashMenuItem {
   icon: string;
 }
 
-function createSlashMenuItems(translations: EditorTranslations): SlashMenuItem[] {
+function createSlashMenuItems(
+  translations: EditorTranslations
+): SlashMenuItem[] {
   return [
     {
       title: translations.slashMenu.heading1.title,
@@ -190,7 +203,11 @@ function createSlashMenuItems(translations: EditorTranslations): SlashMenuItem[]
   ];
 }
 
-function SlashCommandPlugin({ slashMenuItems }: { slashMenuItems: SlashMenuItem[] }) {
+function SlashCommandPlugin({
+  slashMenuItems,
+}: {
+  slashMenuItems: SlashMenuItem[];
+}) {
   const [editor] = useLexicalComposerContext();
   const [showMenu, setShowMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
@@ -283,7 +300,8 @@ function SlashCommandPlugin({ slashMenuItems }: { slashMenuItems: SlashMenuItem[
         }
 
         const textBeforeSlash = textUpToCursor.substring(0, lastSlashIndex);
-        const isAtStart = lastSlashIndex === 0 || textBeforeSlash.match(/^\s*$/);
+        const isAtStart =
+          lastSlashIndex === 0 || textBeforeSlash.match(/^\s*$/);
 
         if (!isAtStart) {
           if (showMenu) closeMenu();
@@ -327,7 +345,9 @@ function SlashCommandPlugin({ slashMenuItems }: { slashMenuItems: SlashMenuItem[
       KEY_ARROW_UP_COMMAND,
       (event) => {
         event.preventDefault();
-        setSelectedIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length);
+        setSelectedIndex(
+          (prev) => (prev - 1 + filteredItems.length) % filteredItems.length
+        );
         return true;
       },
       COMMAND_PRIORITY_HIGH
@@ -358,7 +378,14 @@ function SlashCommandPlugin({ slashMenuItems }: { slashMenuItems: SlashMenuItem[
       removeEnter();
       removeEscape();
     };
-  }, [showMenu, selectedIndex, filteredItems.length, editor, selectItem, closeMenu]);
+  }, [
+    showMenu,
+    selectedIndex,
+    filteredItems.length,
+    editor,
+    selectItem,
+    closeMenu,
+  ]);
 
   if (!showMenu || filteredItems.length === 0) {
     return null;
@@ -388,7 +415,9 @@ function SlashCommandPlugin({ slashMenuItems }: { slashMenuItems: SlashMenuItem[
               </span>
               <div className="flex flex-col items-start">
                 <span className="font-medium">{item.title}</span>
-                <span className="text-xs text-muted-foreground">{item.description}</span>
+                <span className="text-xs text-muted-foreground">
+                  {item.description}
+                </span>
               </div>
             </button>
           ))}
@@ -478,7 +507,10 @@ export function Editor({ translations }: { translations: EditorTranslations }) {
     }
   }, [title, isLoaded]);
 
-  const slashMenuItems = useMemo(() => createSlashMenuItems(translations), [translations]);
+  const slashMenuItems = useMemo(
+    () => createSlashMenuItems(translations),
+    [translations]
+  );
 
   const initialConfig = {
     namespace: "NoteNodesEditor",
@@ -497,7 +529,7 @@ export function Editor({ translations }: { translations: EditorTranslations }) {
   };
 
   return (
-    <div className="max-w-[900px] mx-auto px-24 py-12">
+    <div className="max-w-5xl mx-auto px-4 py-16">
       <input
         type="text"
         value={title}
