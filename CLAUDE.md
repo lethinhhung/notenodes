@@ -20,7 +20,6 @@ This project uses **pnpm** as the package manager.
 - **Styling**: Tailwind CSS v4 with shadcn/ui components (New York style)
 - **Internationalization**: react-i18next with server-side support (en, vi)
 - **Theme**: next-themes (dark/light mode)
-- **Editor**: BlockNote (rich text editor)
 
 ### Routing and i18n
 
@@ -60,7 +59,7 @@ Geist Sans and Geist Mono are loaded conditionally in layout. Vietnamese locale 
 ### Components
 
 - **shadcn/ui**: Pre-configured with `@/components` alias, New York style, neutral base color
-- **Custom components**: `mode-toggle.tsx` (theme switcher), `language-toggle.tsx` (locale switcher), `editor.tsx` (BlockNote editor)
+- **Custom components**: `mode-toggle.tsx` (theme switcher), `language-toggle.tsx` (locale switcher)
 - **Theme Provider**: Wraps app in layout for dark mode support
 
 ### Path Aliases
