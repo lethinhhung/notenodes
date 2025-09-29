@@ -11,6 +11,7 @@ export interface EditorTranslations {
     numberedList: { title: string; description: string };
     quote: { title: string; description: string };
     codeBlock: { title: string; description: string };
+    inlineCode: { title: string; description: string };
   };
 }
 
@@ -49,6 +50,10 @@ export async function getEditorTranslations(locale: string): Promise<EditorTrans
       codeBlock: {
         title: t("editor.slashMenu.codeBlock.title"),
         description: t("editor.slashMenu.codeBlock.description"),
+      },
+      inlineCode: {
+        title: t("editor.slashMenu.inlineCode.title"),
+        description: t("editor.slashMenu.inlineCode.description"),
       },
     },
   };

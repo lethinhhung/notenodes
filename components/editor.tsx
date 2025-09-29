@@ -39,7 +39,6 @@ import {
   COMMAND_PRIORITY_HIGH,
   LexicalEditor,
   $isTextNode,
-  $createParagraphNode,
 } from "lexical";
 import { $setBlocksType } from "@lexical/selection";
 import type { EditorTranslations } from "@/lib/editor-translations";
