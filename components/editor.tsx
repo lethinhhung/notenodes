@@ -366,26 +366,34 @@ function SlashCommandPlugin({ slashMenuItems }: { slashMenuItems: SlashMenuItem[
 
   return (
     <div
-      className="fixed z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg min-w-[300px] max-h-[400px] overflow-y-auto"
+      className="fixed z-50 w-[350px] overflow-hidden rounded-md border bg-popover p-0 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95"
       style={{ top: menuPosition.top, left: menuPosition.left }}
     >
-      {filteredItems.map((item, index) => (
-        <button
-          key={item.title}
-          ref={index === selectedIndex ? scrollToItem : null}
-          className={`w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-            index === selectedIndex ? "bg-gray-100 dark:bg-gray-700" : ""
-          }`}
-          onClick={() => selectItem(index)}
-          onMouseEnter={() => setSelectedIndex(index)}
-        >
-          <span className="text-xl flex-shrink-0 mt-0.5">{item.icon}</span>
-          <div className="flex-1 min-w-0">
-            <div className="font-medium text-gray-900 dark:text-gray-100">{item.title}</div>
-            <div className="text-sm text-gray-500 dark:text-gray-400">{item.description}</div>
-          </div>
-        </button>
-      ))}
+      <div className="max-h-[300px] overflow-y-auto overflow-x-hidden">
+        <div className="overflow-hidden p-1">
+          {filteredItems.map((item, index) => (
+            <button
+              key={item.title}
+              ref={index === selectedIndex ? scrollToItem : null}
+              className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors w-full ${
+                index === selectedIndex
+                  ? "bg-accent text-accent-foreground"
+                  : "hover:bg-accent hover:text-accent-foreground"
+              }`}
+              onClick={() => selectItem(index)}
+              onMouseEnter={() => setSelectedIndex(index)}
+            >
+              <span className="flex h-5 w-5 items-center justify-center mr-2 text-sm font-medium">
+                {item.icon}
+              </span>
+              <div className="flex flex-col items-start">
+                <span className="font-medium">{item.title}</span>
+                <span className="text-xs text-muted-foreground">{item.description}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
