@@ -1,5 +1,5 @@
 import { ModeToggle } from "@/components/mode-toggle";
-import { Editor } from "@/components/editor";
+import { EditorWrapper } from "@/components/editor-wrapper";
 import { LanguageToggle } from "@/components/language-toggle";
 import { getEditorTranslations } from "@/lib/editor-translations";
 
@@ -17,7 +17,7 @@ export default async function Home({
         <ModeToggle />
         <LanguageToggle />
       </div>
-      <Editor translations={translations} />
+      <EditorWrapper translations={translations} />
     </div>
   );
 }
