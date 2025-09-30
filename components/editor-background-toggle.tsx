@@ -17,11 +17,11 @@ export function EditorBackgroundToggle() {
       size="icon"
       onClick={() => dispatch(toggleMuted())}
     >
-      <Square
+      <SquareDashed
         className="scale-100 rotate-0 transition-all data-[muted=true]:scale-0 data-[muted=true]:-rotate-90"
         data-muted={isMuted}
       />
-      <SquareDashed
+      <Square
         className="absolute scale-0 rotate-90 transition-all data-[muted=true]:scale-100 data-[muted=true]:rotate-0"
         data-muted={isMuted}
       />
