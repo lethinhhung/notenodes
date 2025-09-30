@@ -34,7 +34,12 @@ export function ModeToggle() {
   }
 
   return (
-    <Button variant="outline" size="icon" onClick={toggleTheme}>
+    <Button
+      variant="outline"
+      size="icon"
+      onClick={toggleTheme}
+      className="!bg-background shadow-md"
+    >
       <Sun
         className="scale-100 rotate-0 transition-all data-[theme=dark]:scale-0 data-[theme=dark]:-rotate-90 data-[theme=system]:scale-0 data-[theme=system]:-rotate-90"
         data-theme={theme}

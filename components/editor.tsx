@@ -18,11 +18,11 @@ export default function Editor() {
   // Renders the editor instance using a React component.
   return (
     <div
-      className={
+      className={`max-w-5xl mx-auto p-4 [&_.bn-editor]:!pt-16 [&_.bn-editor]:!pb-100 ${
         isMuted
-          ? "[&_.bn-editor]:!bg-secondary [&_.bn-block-content]:!bg-secondary"
-          : "[&_.bn-editor]:!bg-background [&_.bn-block-content]:!bg-background"
-      }
+          ? "[&_.bn-editor]:!bg-secondary [&_.bn-block-content]:!bg-secondary [&_[data-node-type='codeBlock']]:!bg-background [&_pre]:!bg-background"
+          : "[&_.bn-editor]:!bg-background [&_.bn-block-content]:!bg-background [&_[data-node-type='codeBlock']]:!bg-secondary [&_pre]:!bg-secondary"
+      }`}
     >
       <BlockNoteView
         editor={editor}

@@ -27,7 +27,12 @@ export function EditorBackgroundToggle() {
   };
 
   return (
-    <Button variant="outline" size="icon" onClick={handleToggle}>
+    <Button
+      variant="outline"
+      size="icon"
+      onClick={handleToggle}
+      className="!bg-background shadow-md"
+    >
       <SquareDashed
         className="scale-100 rotate-0 transition-all data-[muted=true]:scale-0 data-[muted=true]:-rotate-90"
         data-muted={isMuted}

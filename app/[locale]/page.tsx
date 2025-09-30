@@ -6,14 +6,12 @@ import { EditorBackgroundToggle } from "@/components/editor-background-toggle";
 export default async function Home() {
   return (
     <div className="min-h-screen relative">
-      <div className="absolute top-4 right-4 z-10 flex gap-2">
+      <div className="fixed top-8 right-8 z-50 flex gap-2">
         <EditorBackgroundToggle />
         <ModeToggle />
         <LanguageToggle />
       </div>
-      <main className="container mx-auto px-4 py-16">
-        <Editor />
-      </main>
+      <Editor />
     </div>
   );
 }
