@@ -33,7 +33,7 @@ export default function Editor() {
     };
 
     // Listen to editor changes
-    editor.onEditorContentChange(handleChange);
+    return editor.onChange(handleChange);
   }, [editor]);
 
   // Renders the editor instance using a React component.
