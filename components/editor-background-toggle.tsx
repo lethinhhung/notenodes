@@ -19,7 +19,7 @@ export function EditorBackgroundToggle() {
         dispatch(toggleMuted());
       }
     }
-  }, []);
+  }, [dispatch, isMuted]);
 
   const handleToggle = () => {
     dispatch(toggleMuted());

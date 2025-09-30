@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface EditorState {
   isMuted: boolean;
-  content: any[];
+  content: unknown[];
 }
 
 const initialState: EditorState = {
@@ -20,7 +20,7 @@ const editorSlice = createSlice({
     setMuted: (state, action: PayloadAction<boolean>) => {
       state.isMuted = action.payload;
     },
-    setContent: (state, action: PayloadAction<any[]>) => {
+    setContent: (state, action: PayloadAction<unknown[]>) => {
       state.content = action.payload;
     },
   },

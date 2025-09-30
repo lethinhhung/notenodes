@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAppSelector } from "@/lib/hooks";
-import { blocksToMarkdown, blocksToHTML } from "@/lib/utils/export";
+import { blocksToMarkdown, blocksToHTML, type Block } from "@/lib/utils/export";
 
 export function DownloadButton() {
   const editorContent = useAppSelector((state) => state.editor.content);
@@ -21,11 +21,11 @@ export function DownloadButton() {
       let mimeType: string;
 
       if (format === "markdown") {
-        content = blocksToMarkdown(editorContent);
+        content = blocksToMarkdown(editorContent as Block[]);
         filename = `note-${Date.now()}.md`;
         mimeType = "text/markdown";
       } else if (format === "html") {
-        content = blocksToHTML(editorContent);
+        content = blocksToHTML(editorContent as Block[]);
         filename = `note-${Date.now()}.html`;
         mimeType = "text/html";
       } else {
