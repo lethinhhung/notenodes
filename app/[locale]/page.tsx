@@ -1,5 +1,6 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
+import { Editor } from "@/components/dynamic-editor";
 
 export default async function Home() {
   return (
@@ -9,7 +10,7 @@ export default async function Home() {
         <LanguageToggle />
       </div>
       <main className="container mx-auto px-4 py-16">
-        <h1 className="text-4xl font-bold text-center">Welcome</h1>
+        <Editor />
       </main>
     </div>
   );
