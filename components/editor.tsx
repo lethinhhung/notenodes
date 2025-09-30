@@ -39,11 +39,14 @@ export default function Editor() {
   // Renders the editor instance using a React component.
   return (
     <div
-      className={`max-w-5xl mx-auto p-4 [&_.bn-editor]:!pt-16 [&_.bn-editor]:!pb-100 [&_[data-node-type='codeBlock']]:!rounded-md [&_pre]:!rounded-md [&_.bn-editor]:!border [&_.bn-editor]:!border-transparent [&_.bn-editor]:hover:!border-dashed [&_.bn-editor]:hover:!border-border ${
-        isMuted
-          ? "[&_.bn-editor]:!bg-secondary [&_.bn-block-content]:!bg-secondary [&_[data-node-type='codeBlock']]:!bg-background [&_pre]:!bg-background"
-          : "[&_.bn-editor]:!bg-background [&_.bn-block-content]:!bg-background [&_[data-node-type='codeBlock']]:!bg-secondary [&_pre]:!bg-secondary"
-      }`}
+      className={`max-w-5xl mx-auto p-4 [&_.bn-editor]:!pt-16 [&_.bn-editor]:!pb-100 
+        [&_[data-node-type='codeBlock']]:!text-foreground [&_pre]:!text-foreground [&_[data-node-type='codeBlock']]:!rounded-md [&_pre]:!rounded-md 
+        [&_.bn-editor]:!border [&_.bn-editor]:!border-transparent [&_.bn-editor]:hover:!border-dashed [&_.bn-editor]:hover:!border-border 
+        ${
+          isMuted
+            ? "[&_.bn-editor]:!bg-secondary [&_.bn-block-content]:!bg-secondary [&_[data-node-type='codeBlock']]:!bg-background [&_pre]:!bg-background"
+            : "[&_.bn-editor]:!bg-background [&_.bn-block-content]:!bg-background [&_[data-node-type='codeBlock']]:!bg-secondary [&_pre]:!bg-secondary"
+        }`}
     >
       <BlockNoteView
         editor={editor}
