@@ -4,12 +4,14 @@ import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
 import "@blocknote/shadcn/style.css";
 import { useTheme } from "next-themes";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppSelector, useAppDispatch } from "@/lib/hooks";
+import { setContent } from "@/lib/features/editor/editorSlice";
 import { useEffect, useMemo } from "react";
 
 // Our <Editor> component we can reuse later
 export default function Editor() {
   const { theme, systemTheme } = useTheme();
+  const dispatch = useAppDispatch();
   const isMuted = useAppSelector((state) => state.editor.isMuted);
 
   // Load initial content from localStorage
@@ -24,17 +26,24 @@ export default function Editor() {
 
   const currentTheme = theme === "system" ? systemTheme : theme;
 
-  // Save content to localStorage on change
+  // Initialize Redux state with localStorage content on mount
   useEffect(() => {
     if (!editor) return;
 
+    // Set initial content to Redux
+    if (initialContent) {
+      dispatch(setContent(initialContent));
+    }
+
     const handleChange = () => {
-      localStorage.setItem("editor-content", JSON.stringify(editor.document));
+      const content = editor.document;
+      localStorage.setItem("editor-content", JSON.stringify(content));
+      dispatch(setContent(content));
     };
 
     // Listen to editor changes
     return editor.onChange(handleChange);
-  }, [editor]);
+  }, [editor, dispatch, initialContent]);
 
   // Renders the editor instance using a React component.
   return (
