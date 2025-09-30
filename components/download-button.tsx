@@ -57,7 +57,7 @@ export function DownloadButton() {
           size="icon"
           className="!bg-background shadow-md"
         >
-          <Download className="h-[1.2rem] w-[1.2rem]" />
+          <Download />
           <span className="sr-only">Download content</span>
         </Button>
       </DropdownMenuTrigger>

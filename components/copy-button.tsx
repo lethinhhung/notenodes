@@ -40,7 +40,7 @@ export function CopyButton() {
           size="icon"
           className="!bg-background shadow-md"
         >
-          <Copy className="h-[1.2rem] w-[1.2rem]" />
+          <Copy />
           <span className="sr-only">Copy content</span>
         </Button>
       </DropdownMenuTrigger>
