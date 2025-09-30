@@ -5,15 +5,36 @@ import { BlockNoteView } from "@blocknote/shadcn";
 import "@blocknote/shadcn/style.css";
 import { useTheme } from "next-themes";
 import { useAppSelector } from "@/lib/hooks";
+import { useEffect, useMemo } from "react";
 
 // Our <Editor> component we can reuse later
 export default function Editor() {
-  // Creates a new editor instance.
-  const editor = useCreateBlockNote();
   const { theme, systemTheme } = useTheme();
   const isMuted = useAppSelector((state) => state.editor.isMuted);
 
+  // Load initial content from localStorage
+  const initialContent = useMemo(() => {
+    if (typeof window === "undefined") return undefined;
+    const stored = localStorage.getItem("editor-content");
+    return stored ? JSON.parse(stored) : undefined;
+  }, []);
+
+  // Creates a new editor instance with initial content
+  const editor = useCreateBlockNote({ initialContent });
+
   const currentTheme = theme === "system" ? systemTheme : theme;
+
+  // Save content to localStorage on change
+  useEffect(() => {
+    if (!editor) return;
+
+    const handleChange = () => {
+      localStorage.setItem("editor-content", JSON.stringify(editor.document));
+    };
+
+    // Listen to editor changes
+    editor.onEditorContentChange(handleChange);
+  }, [editor]);
 
   // Renders the editor instance using a React component.
   return (
