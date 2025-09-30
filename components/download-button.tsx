@@ -20,17 +20,20 @@ export function DownloadButton() {
       let filename: string;
       let mimeType: string;
 
+      // Ensure editorContent is an array
+      const blocks = Array.isArray(editorContent) ? editorContent : [];
+
       if (format === "markdown") {
-        content = blocksToMarkdown(editorContent as Block[]);
-        filename = `note-${Date.now()}.md`;
+        content = blocksToMarkdown(blocks as Block[]);
+        filename = `notenodes-${Date.now()}.md`;
         mimeType = "text/markdown";
       } else if (format === "html") {
-        content = blocksToHTML(editorContent as Block[]);
-        filename = `note-${Date.now()}.html`;
+        content = blocksToHTML(blocks as Block[]);
+        filename = `notenodes-${Date.now()}.html`;
         mimeType = "text/html";
       } else {
-        content = JSON.stringify(editorContent, null, 2);
-        filename = `note-${Date.now()}.json`;
+        content = JSON.stringify(blocks, null, 2);
+        filename = `notenodes-${Date.now()}.json`;
         mimeType = "application/json";
       }
 

@@ -18,12 +18,15 @@ export function CopyButton() {
     try {
       let content: string;
 
+      // Ensure editorContent is an array
+      const blocks = Array.isArray(editorContent) ? editorContent : [];
+
       if (format === "markdown") {
-        content = blocksToMarkdown(editorContent as Block[]);
+        content = blocksToMarkdown(blocks as Block[]);
       } else if (format === "html") {
-        content = blocksToHTML(editorContent as Block[]);
+        content = blocksToHTML(blocks as Block[]);
       } else {
-        content = JSON.stringify(editorContent, null, 2);
+        content = JSON.stringify(blocks, null, 2);
       }
 
       await navigator.clipboard.writeText(content);

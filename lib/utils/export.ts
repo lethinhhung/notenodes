@@ -23,7 +23,7 @@ export function blocksToMarkdown(blocks: Block[]): string {
   return blocks
     .map((block) => {
       const type = block.type;
-      const content = block.content || [];
+      const content = Array.isArray(block.content) ? block.content : [];
 
       // Extract text from inline content
       const text = content
@@ -72,7 +72,7 @@ export function blocksToHTML(blocks: Block[]): string {
   const htmlBlocks = blocks
     .map((block) => {
       const type = block.type;
-      const content = block.content || [];
+      const content = Array.isArray(block.content) ? block.content : [];
 
       // Extract HTML from inline content
       const htmlText = content
