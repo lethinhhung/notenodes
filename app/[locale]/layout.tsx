@@ -35,8 +35,8 @@ export default async function RootLayout({
   const fontClasses =
     locale === "vi" ? "" : `${geistSans.variable} ${geistMono.variable}`;
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body className={`${fontClasses} antialiased`}>
+    <html lang={locale} suppressHydrationWarning spellCheck={false}>
+      <body className={`${fontClasses} antialiased`} spellCheck={false}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
