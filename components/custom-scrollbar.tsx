@@ -64,8 +64,15 @@ export function CustomScrollbar({
     dragStartScrollTop.current = containerRef.current?.scrollTop || 0;
   };
 
+  const handleThumbTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+    dragStartY.current = e.touches[0].clientY;
+    dragStartScrollTop.current = containerRef.current?.scrollTop || 0;
+  };
+
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMove = (clientY: number) => {
       if (
         !isDragging ||
         !containerRef.current ||
@@ -77,7 +84,7 @@ export function CustomScrollbar({
       const container = containerRef.current;
       const content = contentRef.current;
       const scrollbar = scrollbarRef.current;
-      const deltaY = e.clientY - dragStartY.current;
+      const deltaY = clientY - dragStartY.current;
       const scrollHeight = content.scrollHeight;
       const clientHeight = container.clientHeight;
       const scrollbarHeight = scrollbar.clientHeight;
@@ -93,19 +100,33 @@ export function CustomScrollbar({
       );
     };
 
-    const handleMouseUp = () => {
+    const handleMouseMove = (e: MouseEvent) => {
+      handleMove(e.clientY);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        handleMove(e.touches[0].clientY);
+      }
+    };
+
+    const handleEnd = () => {
       setIsDragging(false);
     };
 
     if (isDragging) {
       document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener("mouseup", handleEnd);
+      document.addEventListener("touchmove", handleTouchMove);
+      document.addEventListener("touchend", handleEnd);
       document.body.style.userSelect = "none";
     }
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mouseup", handleEnd);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleEnd);
       document.body.style.userSelect = "";
     };
   }, [isDragging]);
@@ -158,6 +179,7 @@ export function CustomScrollbar({
         <div
           ref={thumbRef}
           onMouseDown={handleThumbMouseDown}
+          onTouchStart={handleThumbTouchStart}
           className="absolute right-0 w-full bg-primary rounded-full cursor-pointer transition-colors"
           style={{ willChange: "transform" }}
         />
