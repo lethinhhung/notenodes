@@ -17,6 +17,7 @@ export function CustomScrollbar({
   const thumbRef = useRef<HTMLDivElement>(null);
 
   const [isDragging, setIsDragging] = useState(false);
+  const [isScrollable, setIsScrollable] = useState(false);
   const dragStartY = useRef(0);
   const dragStartScrollTop = useRef(0);
 
@@ -32,6 +33,12 @@ export function CustomScrollbar({
     const clientHeight = container.clientHeight;
     const scrollTop = container.scrollTop;
     const scrollbarHeight = scrollbar.clientHeight;
+
+    // Check if content is scrollable
+    const contentIsScrollable = scrollHeight > clientHeight;
+    setIsScrollable(contentIsScrollable);
+
+    if (!contentIsScrollable) return;
 
     // Calculate thumb height and position based on scrollbar height
     const thumbHeight = Math.max(
@@ -140,10 +147,12 @@ export function CustomScrollbar({
         <div ref={contentRef}>{children}</div>
       </div>
 
-      {/* Custom scrollbar track - always visible for debugging */}
+      {/* Custom scrollbar track - visible only when scrollable */}
       <div
         ref={scrollbarRef}
-        className="fixed top-4 bottom-4 right-3 w-2 transition-opacity duration-200 z-[100]"
+        className={`fixed top-4 bottom-4 right-3 w-2 transition-opacity duration-200 z-[100] ${
+          isScrollable ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
       >
         {/* Scrollbar thumb */}
         <div
