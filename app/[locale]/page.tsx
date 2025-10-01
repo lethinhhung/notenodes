@@ -1,5 +1,5 @@
 import { ModeToggle } from "@/components/mode-toggle";
-import { LanguageToggle } from "@/components/language-toggle";
+// import { LanguageToggle } from "@/components/language-toggle";
 import { Editor } from "@/components/dynamic-editor";
 import { EditorBackgroundToggle } from "@/components/editor-background-toggle";
 import { CopyButton } from "@/components/copy-button";
@@ -15,7 +15,7 @@ export default async function Home() {
           <DownloadButton />
           <EditorBackgroundToggle />
           <ModeToggle />
-          <LanguageToggle />
+          {/* <LanguageToggle /> */}
         </div>
         <Editor />
       </div>
