@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAppSelector } from "@/lib/hooks";
 import { blocksToMarkdown, blocksToHTML, type Block } from "@/lib/utils/export";
+import { toast } from "sonner";
 
 export function CopyButton() {
   const editorContent = useAppSelector((state) => state.editor.content);
@@ -17,21 +18,27 @@ export function CopyButton() {
   const handleCopy = async (format: "markdown" | "json" | "html") => {
     try {
       let content: string;
+      let formatLabel: string;
 
       // Ensure editorContent is an array
       const blocks = Array.isArray(editorContent) ? editorContent : [];
 
       if (format === "markdown") {
         content = blocksToMarkdown(blocks as Block[]);
+        formatLabel = "Markdown";
       } else if (format === "html") {
         content = blocksToHTML(blocks as Block[]);
+        formatLabel = "HTML";
       } else {
         content = JSON.stringify(blocks, null, 2);
+        formatLabel = "JSON";
       }
 
       await navigator.clipboard.writeText(content);
+      toast.success(`Copied as ${formatLabel}`);
     } catch (error) {
       console.error("Copy failed:", error);
+      toast.error("Failed to copy content");
     }
   };
 

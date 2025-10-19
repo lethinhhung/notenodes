@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function ModeToggle() {
   const { theme, setTheme } = useTheme();
@@ -17,10 +18,13 @@ export function ModeToggle() {
   const toggleTheme = () => {
     if (theme === "light") {
       setTheme("dark");
+      toast.success("Switched to dark mode");
     } else if (theme === "dark") {
       setTheme("system");
+      toast.success("Switched to system theme");
     } else {
       setTheme("light");
+      toast.success("Switched to light mode");
     }
   };
 

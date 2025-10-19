@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAppSelector } from "@/lib/hooks";
 import { blocksToMarkdown, blocksToHTML, type Block } from "@/lib/utils/export";
+import { toast } from "sonner";
 
 export function DownloadButton() {
   const editorContent = useAppSelector((state) => state.editor.content);
@@ -19,6 +20,7 @@ export function DownloadButton() {
       let content: string;
       let filename: string;
       let mimeType: string;
+      let formatLabel: string;
 
       // Ensure editorContent is an array
       const blocks = Array.isArray(editorContent) ? editorContent : [];
@@ -27,14 +29,17 @@ export function DownloadButton() {
         content = blocksToMarkdown(blocks as Block[]);
         filename = `notenodes-${Date.now()}.md`;
         mimeType = "text/markdown";
+        formatLabel = "Markdown";
       } else if (format === "html") {
         content = blocksToHTML(blocks as Block[]);
         filename = `notenodes-${Date.now()}.html`;
         mimeType = "text/html";
+        formatLabel = "HTML";
       } else {
         content = JSON.stringify(blocks, null, 2);
         filename = `notenodes-${Date.now()}.json`;
         mimeType = "application/json";
+        formatLabel = "JSON";
       }
 
       // Create blob and download
@@ -47,8 +52,11 @@ export function DownloadButton() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+
+      toast.success(`Downloaded as ${formatLabel}`);
     } catch (error) {
       console.error("Export failed:", error);
+      toast.error("Failed to download content");
     }
   };
 

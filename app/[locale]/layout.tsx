@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { languages } from "@/lib/i18n/settings";
 import StoreProvider from "@/app/StoreProvider";
 import { Analytics } from "@vercel/analytics/next";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,6 +47,7 @@ export default async function RootLayout({
         >
           <StoreProvider>
             {children}
+            <Toaster />
             <Analytics />
           </StoreProvider>
         </ThemeProvider>

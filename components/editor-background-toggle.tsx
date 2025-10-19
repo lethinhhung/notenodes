@@ -6,6 +6,7 @@ import { toggleMuted } from "@/lib/features/editor/editorSlice";
 
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 export function EditorBackgroundToggle() {
   const dispatch = useAppDispatch();
@@ -23,7 +24,9 @@ export function EditorBackgroundToggle() {
 
   const handleToggle = () => {
     dispatch(toggleMuted());
-    localStorage.setItem("editor-background", isMuted ? "default" : "muted");
+    const newState = !isMuted;
+    localStorage.setItem("editor-background", newState ? "muted" : "default");
+    toast.success(newState ? "Switched to muted background" : "Switched to default background");
   };
 
   return (
