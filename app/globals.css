@@ -122,13 +122,13 @@
     @apply bg-background text-foreground;
   }
 
-  /* Disable default scrollbar */
-  * {
+  /* Disable default scrollbar - temporarily disabled for native scrollbar */
+  /* * {
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
 
   *::-webkit-scrollbar {
     display: none;
-  }
+  } */
 }
