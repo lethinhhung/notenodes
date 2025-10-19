@@ -12,12 +12,12 @@ export default async function Home() {
     <CustomScrollbar className="h-screen">
       <div className="min-h-screen relative">
         <div className="fixed top-8 right-8 z-50 flex gap-2">
-          <TechStackInfo />
           <CopyButton />
           <DownloadButton />
           <EditorBackgroundToggle />
           <ModeToggle />
           {/* <LanguageToggle /> */}
+          <TechStackInfo />
         </div>
         <Editor />
       </div>
