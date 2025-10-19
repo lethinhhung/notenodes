@@ -155,3 +155,30 @@ ${htmlBlocks}
 </body>
 </html>`;
 }
+
+// Simple converter from BlockNote blocks to plain text
+export function blocksToPlainText(blocks: Block[]): string {
+  if (!blocks || !Array.isArray(blocks)) return "";
+
+  return blocks
+    .map((block) => {
+      const content = Array.isArray(block.content) ? block.content : [];
+
+      // Extract plain text from inline content
+      const text = content
+        .map((item: Content) => {
+          if (item.type === "text") {
+            return item.text || "";
+          }
+          if (item.type === "link") {
+            // For plain text, just return the link text (not the URL)
+            return item.content?.[0]?.text || "";
+          }
+          return "";
+        })
+        .join("");
+
+      return text;
+    })
+    .join("\n");
+}

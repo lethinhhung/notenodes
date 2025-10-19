@@ -8,23 +8,40 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setContent } from "@/lib/features/editor/editorSlice";
 import {
   parseJSONContent,
   parseMarkdownContent,
   parsePlainTextContent,
+  parseHTMLContent,
 } from "@/lib/utils/import";
 import { toast } from "sonner";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+
+type ImportFormat = "json" | "markdown" | "text" | "html";
 
 export function ImportButton() {
   const dispatch = useAppDispatch();
   const editorContent = useAppSelector((state) => state.editor.content);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const formatRef = useRef<"json" | "markdown" | "text">("json");
+  const formatRef = useRef<ImportFormat>("json");
+  const pendingContentRef = useRef<{
+    blocks: unknown[];
+    formatLabel: string;
+  } | null>(null);
 
-  const handleFileSelect = (format: "json" | "markdown" | "text") => {
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  const handleFileSelect = (format: ImportFormat) => {
     formatRef.current = format;
 
     // Trigger file input
@@ -32,6 +49,24 @@ export function ImportButton() {
       fileInputRef.current.value = ""; // Reset to allow selecting the same file again
       fileInputRef.current.click();
     }
+  };
+
+  const applyImport = () => {
+    if (!pendingContentRef.current) return;
+
+    const { blocks, formatLabel } = pendingContentRef.current;
+
+    // Update editor content
+    dispatch(setContent(blocks));
+
+    // Update localStorage to sync with editor
+    localStorage.setItem("editor-content", JSON.stringify(blocks));
+
+    toast.success(`Imported from ${formatLabel}`);
+
+    // Reset
+    pendingContentRef.current = null;
+    setShowConfirmDialog(false);
   };
 
   const handleFileChange = async (
@@ -54,8 +89,17 @@ export function ImportButton() {
       if (format === "json" && fileExtension !== "json") {
         toast.error("Please select a JSON file (.json)");
         return;
-      } else if (format === "markdown" && !["md", "markdown"].includes(fileExtension || "")) {
+      } else if (
+        format === "markdown" &&
+        !["md", "markdown"].includes(fileExtension || "")
+      ) {
         toast.error("Please select a Markdown file (.md)");
+        return;
+      } else if (
+        format === "html" &&
+        !["html", "htm"].includes(fileExtension || "")
+      ) {
+        toast.error("Please select an HTML file (.html)");
         return;
       } else if (format === "text" && fileExtension !== "txt") {
         toast.error("Please select a text file (.txt)");
@@ -75,12 +119,15 @@ export function ImportButton() {
       } else if (format === "markdown") {
         blocks = parseMarkdownContent(content);
         formatLabel = "Markdown";
+      } else if (format === "html") {
+        blocks = parseHTMLContent(content);
+        formatLabel = "HTML";
       } else {
         blocks = parsePlainTextContent(content);
         formatLabel = "Text";
       }
 
-      // Confirm if there's existing content
+      // Check if there's existing content
       if (Array.isArray(editorContent) && editorContent.length > 0) {
         const hasContent = editorContent.some(
           (block: unknown) =>
@@ -99,21 +146,16 @@ export function ImportButton() {
         );
 
         if (hasContent) {
-          const confirmed = window.confirm(
-            "This will replace your current content. Continue?"
-          );
-          if (!confirmed) {
-            return;
-          }
+          // Store pending content and show dialog
+          pendingContentRef.current = { blocks, formatLabel };
+          setShowConfirmDialog(true);
+          return;
         }
       }
 
-      // Update editor content
+      // No existing content, apply directly
       dispatch(setContent(blocks));
-
-      // Update localStorage to sync with editor
       localStorage.setItem("editor-content", JSON.stringify(blocks));
-
       toast.success(`Imported from ${formatLabel}`);
     } catch (error) {
       console.error("Import failed:", error);
@@ -130,7 +172,7 @@ export function ImportButton() {
         type="file"
         className="hidden"
         onChange={handleFileChange}
-        accept=".json,.md,.markdown,.txt"
+        accept=".json,.md,.markdown,.html,.htm,.txt"
       />
 
       <DropdownMenu>
@@ -145,17 +187,41 @@ export function ImportButton() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => handleFileSelect("json")}>
-            Import JSON
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleFileSelect("markdown")}>
             Import Markdown
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFileSelect("html")}>
+            Import HTML
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleFileSelect("text")}>
             Import Text
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFileSelect("json")}>
+            Import JSON
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Replace existing content?</DialogTitle>
+            <DialogDescription>
+              This will replace your current note content with the imported
+              file. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowConfirmDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={applyImport}>Continue</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

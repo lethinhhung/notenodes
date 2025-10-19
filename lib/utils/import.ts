@@ -1,5 +1,154 @@
 import { Block } from "./export";
 
+// Parse HTML content and convert to BlockNote blocks
+export function parseHTMLContent(content: string): Block[] {
+  // Create a temporary DOM element to parse HTML
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(content, "text/html");
+  const blocks: Block[] = [];
+
+  // Get all block-level elements from body
+  const bodyElements = doc.body.childNodes;
+
+  for (const node of bodyElements) {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      const element = node as HTMLElement;
+      const block = parseHTMLElement(element);
+      if (block) {
+        blocks.push(block);
+      }
+    }
+  }
+
+  return blocks.length > 0 ? blocks : [{ type: "paragraph", content: [] }];
+}
+
+// Parse a single HTML element into a BlockNote block
+function parseHTMLElement(element: HTMLElement): Block | null {
+  const tagName = element.tagName.toLowerCase();
+
+  // Headings
+  if (tagName.match(/^h[1-6]$/)) {
+    const level = Math.min(3, parseInt(tagName[1])); // Cap at h3
+    return {
+      type: "heading",
+      content: parseInlineHTML(element),
+      props: { level },
+    };
+  }
+
+  // Paragraphs
+  if (tagName === "p") {
+    return {
+      type: "paragraph",
+      content: parseInlineHTML(element),
+    };
+  }
+
+  // List items (bullet)
+  if (tagName === "li") {
+    const parentTag = element.parentElement?.tagName.toLowerCase();
+    return {
+      type: parentTag === "ol" ? "numberedListItem" : "bulletListItem",
+      content: parseInlineHTML(element),
+    };
+  }
+
+  // Code blocks
+  if (tagName === "pre") {
+    const codeElement = element.querySelector("code");
+    const text = (codeElement || element).textContent || "";
+    const className = codeElement?.className || "";
+    const languageMatch = className.match(/language-(\w+)/);
+    const language = languageMatch ? languageMatch[1] : "";
+
+    return {
+      type: "codeBlock",
+      content: [{ type: "text", text }],
+      props: { language },
+    };
+  }
+
+  // Blockquotes - convert to paragraph
+  if (tagName === "blockquote") {
+    return {
+      type: "paragraph",
+      content: parseInlineHTML(element),
+    };
+  }
+
+  // Divs - parse children
+  if (tagName === "div") {
+    return {
+      type: "paragraph",
+      content: parseInlineHTML(element),
+    };
+  }
+
+  return null;
+}
+
+// Parse inline HTML elements (bold, italic, code, links)
+function parseInlineHTML(element: HTMLElement): Block["content"] {
+  const content: NonNullable<Block["content"]> = [];
+
+  function processNode(node: Node, targetContent: NonNullable<Block["content"]>): void {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent || "";
+      if (text) {
+        targetContent.push({ type: "text", text });
+      }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      const el = node as HTMLElement;
+      const tagName = el.tagName.toLowerCase();
+
+      // Links
+      if (tagName === "a") {
+        const href = el.getAttribute("href") || "";
+        const linkText = el.textContent || "";
+        targetContent.push({
+          type: "link",
+          href,
+          content: [{ type: "text", text: linkText }],
+        });
+        return;
+      }
+
+      // Styled text
+      const styles: { bold?: boolean; italic?: boolean; code?: boolean } = {};
+
+      if (tagName === "strong" || tagName === "b") {
+        styles.bold = true;
+      }
+      if (tagName === "em" || tagName === "i") {
+        styles.italic = true;
+      }
+      if (tagName === "code") {
+        styles.code = true;
+      }
+
+      // If has styles, process text content with styles
+      if (Object.keys(styles).length > 0) {
+        const text = el.textContent || "";
+        if (text) {
+          targetContent.push({ type: "text", text, styles });
+        }
+      } else {
+        // Otherwise, process child nodes
+        for (const childNode of el.childNodes) {
+          processNode(childNode, targetContent);
+        }
+      }
+    }
+  }
+
+  for (const childNode of element.childNodes) {
+    processNode(childNode, content);
+  }
+
+  return content.length > 0 ? content : [{ type: "text", text: "" }];
+}
+
 // Validate if the parsed JSON is a valid BlockNote blocks array
 export function isValidBlocksArray(data: unknown): data is Block[] {
   if (!Array.isArray(data)) return false;

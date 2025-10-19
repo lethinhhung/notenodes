@@ -9,13 +9,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAppSelector } from "@/lib/hooks";
-import { blocksToMarkdown, blocksToHTML, type Block } from "@/lib/utils/export";
+import { blocksToMarkdown, blocksToHTML, blocksToPlainText, type Block } from "@/lib/utils/export";
 import { toast } from "sonner";
 
 export function DownloadButton() {
   const editorContent = useAppSelector((state) => state.editor.content);
 
-  const handleExport = async (format: "markdown" | "json" | "html") => {
+  const handleExport = async (format: "markdown" | "json" | "html" | "text") => {
     try {
       let content: string;
       let filename: string;
@@ -35,6 +35,11 @@ export function DownloadButton() {
         filename = `notenodes-${Date.now()}.html`;
         mimeType = "text/html";
         formatLabel = "HTML";
+      } else if (format === "text") {
+        content = blocksToPlainText(blocks as Block[]);
+        filename = `notenodes-${Date.now()}.txt`;
+        mimeType = "text/plain";
+        formatLabel = "Text";
       } else {
         content = JSON.stringify(blocks, null, 2);
         filename = `notenodes-${Date.now()}.json`;
@@ -78,6 +83,9 @@ export function DownloadButton() {
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleExport("html")}>
           Download HTML
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleExport("text")}>
+          Download Text
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleExport("json")}>
           Download JSON

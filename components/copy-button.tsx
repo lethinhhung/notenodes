@@ -9,13 +9,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAppSelector } from "@/lib/hooks";
-import { blocksToMarkdown, blocksToHTML, type Block } from "@/lib/utils/export";
+import { blocksToMarkdown, blocksToHTML, blocksToPlainText, type Block } from "@/lib/utils/export";
 import { toast } from "sonner";
 
 export function CopyButton() {
   const editorContent = useAppSelector((state) => state.editor.content);
 
-  const handleCopy = async (format: "markdown" | "json" | "html") => {
+  const handleCopy = async (format: "markdown" | "json" | "html" | "text") => {
     try {
       let content: string;
       let formatLabel: string;
@@ -29,6 +29,9 @@ export function CopyButton() {
       } else if (format === "html") {
         content = blocksToHTML(blocks as Block[]);
         formatLabel = "HTML";
+      } else if (format === "text") {
+        content = blocksToPlainText(blocks as Block[]);
+        formatLabel = "Text";
       } else {
         content = JSON.stringify(blocks, null, 2);
         formatLabel = "JSON";
@@ -60,6 +63,9 @@ export function CopyButton() {
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleCopy("html")}>
           Copy as HTML
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleCopy("text")}>
+          Copy as Text
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleCopy("json")}>
           Copy as JSON
