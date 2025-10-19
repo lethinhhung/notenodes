@@ -6,13 +6,17 @@ import "@blocknote/shadcn/style.css";
 import { useTheme } from "next-themes";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { setContent } from "@/lib/features/editor/editorSlice";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 // Our <Editor> component we can reuse later
 export default function Editor() {
   const { theme, systemTheme } = useTheme();
   const dispatch = useAppDispatch();
   const isMuted = useAppSelector((state) => state.editor.isMuted);
+  const reduxContent = useAppSelector((state) => state.editor.content);
+
+  // Ref to track if we're updating from external source (import)
+  const isExternalUpdate = useRef(false);
 
   // Load initial content from localStorage
   const initialContent = useMemo(() => {
@@ -36,6 +40,12 @@ export default function Editor() {
     }
 
     const handleChange = () => {
+      // Skip if this change came from external update
+      if (isExternalUpdate.current) {
+        isExternalUpdate.current = false;
+        return;
+      }
+
       const content = editor.document;
       localStorage.setItem("editor-content", JSON.stringify(content));
       dispatch(setContent(content));
@@ -44,6 +54,26 @@ export default function Editor() {
     // Listen to editor changes
     return editor.onChange(handleChange);
   }, [editor, dispatch, initialContent]);
+
+  // Update editor when Redux content changes externally (e.g., from import)
+  useEffect(() => {
+    if (!editor) return;
+
+    // Check if this is an external update (from import, not from editor onChange)
+    const currentEditorContent = JSON.stringify(editor.document);
+    const newReduxContent = JSON.stringify(reduxContent);
+
+    // Only update if content actually changed and it's different from current editor content
+    if (
+      newReduxContent !== currentEditorContent &&
+      Array.isArray(reduxContent) &&
+      reduxContent.length > 0
+    ) {
+      isExternalUpdate.current = true;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      editor.replaceBlocks(editor.document, reduxContent as any);
+    }
+  }, [editor, reduxContent]);
 
   // Renders the editor instance using a React component.
   return (
