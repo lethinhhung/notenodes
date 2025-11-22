@@ -1,6 +1,6 @@
 "use client";
 
-import { Download } from "lucide-react";
+import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -71,9 +71,9 @@ export function DownloadButton() {
         <Button
           variant="outline"
           size="icon"
-          className="!bg-background shadow-md"
+          className="rounded-full bg-white/5 dark:bg-black/5 backdrop-blur-xl border-white/10 dark:border-white/5 shadow-lg hover:bg-white/30 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:size-5"
         >
-          <Download />
+          <Upload className="h-4 w-4" />
           <span className="sr-only">Download content</span>
         </Button>
       </DropdownMenuTrigger>

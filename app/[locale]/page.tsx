@@ -12,7 +12,7 @@ export default async function Home() {
   return (
     <div className="h-screen overflow-auto">
       <div className="min-h-screen relative">
-        <div className="fixed top-8 right-8 z-50 flex gap-2">
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex gap-2">
           <ImportButton />
           <CopyButton />
           <DownloadButton />
