@@ -23,7 +23,7 @@ export function TechStackInfo() {
           <span className="sr-only">Tech stack information</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg rounded-3xl">
         <DialogHeader>
           <DialogTitle>About this project</DialogTitle>
         </DialogHeader>
