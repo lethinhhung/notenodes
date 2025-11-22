@@ -26,7 +26,11 @@ export function EditorBackgroundToggle() {
     dispatch(toggleMuted());
     const newState = !isMuted;
     localStorage.setItem("editor-background", newState ? "muted" : "default");
-    toast.success(newState ? "Switched to muted background" : "Switched to default background");
+    toast.success(
+      newState
+        ? "Switched to muted background"
+        : "Switched to default background"
+    );
   };
 
   return (
@@ -34,7 +38,7 @@ export function EditorBackgroundToggle() {
       variant="outline"
       size="icon"
       onClick={handleToggle}
-      className="rounded-full bg-white/5 dark:bg-black/5 backdrop-blur-xl border-white/10 dark:border-white/5 shadow-lg hover:bg-white/30 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:size-5"
+      className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
     >
       <SquareDashed
         className="scale-100 rotate-0 transition-all data-[muted=true]:scale-0 data-[muted=true]:-rotate-90"
