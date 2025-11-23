@@ -1,12 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export type EditorBackgroundMode = "default" | "muted" | "glass";
+export type GridMode = "off" | "normal" | "loose";
+
 interface EditorState {
-  isMuted: boolean;
+  backgroundMode: EditorBackgroundMode;
+  gridMode: GridMode;
   content: unknown[];
 }
 
 const initialState: EditorState = {
-  isMuted: false,
+  backgroundMode: "default",
+  gridMode: "off",
   content: [],
 };
 
@@ -14,11 +19,21 @@ const editorSlice = createSlice({
   name: "editor",
   initialState,
   reducers: {
-    toggleMuted: (state) => {
-      state.isMuted = !state.isMuted;
+    cycleBackgroundMode: (state) => {
+      const modes: EditorBackgroundMode[] = ["default", "muted", "glass"];
+      const currentIndex = modes.indexOf(state.backgroundMode);
+      state.backgroundMode = modes[(currentIndex + 1) % modes.length];
     },
-    setMuted: (state, action: PayloadAction<boolean>) => {
-      state.isMuted = action.payload;
+    setBackgroundMode: (state, action: PayloadAction<EditorBackgroundMode>) => {
+      state.backgroundMode = action.payload;
+    },
+    cycleGridMode: (state) => {
+      const modes: GridMode[] = ["off", "normal", "loose"];
+      const currentIndex = modes.indexOf(state.gridMode);
+      state.gridMode = modes[(currentIndex + 1) % modes.length];
+    },
+    setGridMode: (state, action: PayloadAction<GridMode>) => {
+      state.gridMode = action.payload;
     },
     setContent: (state, action: PayloadAction<unknown[]>) => {
       state.content = action.payload;
@@ -26,5 +41,5 @@ const editorSlice = createSlice({
   },
 });
 
-export const { toggleMuted, setMuted, setContent } = editorSlice.actions;
+export const { cycleBackgroundMode, setBackgroundMode, cycleGridMode, setGridMode, setContent } = editorSlice.actions;
 export default editorSlice.reducer;

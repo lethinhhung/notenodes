@@ -12,7 +12,7 @@ import { useEffect, useMemo, useRef } from "react";
 export default function Editor() {
   const { theme, systemTheme } = useTheme();
   const dispatch = useAppDispatch();
-  const isMuted = useAppSelector((state) => state.editor.isMuted);
+  const backgroundMode = useAppSelector((state) => state.editor.backgroundMode);
   const reduxContent = useAppSelector((state) => state.editor.content);
 
   // Ref to track if we're updating from external source (import)
@@ -75,17 +75,26 @@ export default function Editor() {
     }
   }, [editor, reduxContent]);
 
+  const getBackgroundClasses = () => {
+    switch (backgroundMode) {
+      case "muted":
+        return "[&_.bn-editor]:!bg-secondary [&_.bn-block-content]:!bg-secondary [&_[data-node-type='codeBlock']]:!bg-background [&_pre]:!bg-background";
+      case "glass":
+        return "[&_.bn-editor]:!bg-white/5 dark:[&_.bn-editor]:!bg-black/5 [&_.bn-editor]:!backdrop-blur-xs [&_.bn-editor]:!border-black/10 dark:[&_.bn-editor]:!border-white/10 [&_.bn-editor]:!shadow-lg [&_.bn-editor]:!rounded-2xl [&_.bn-block-content]:!bg-transparent [&_[data-node-type='codeBlock']]:!bg-black/5 dark:[&_[data-node-type='codeBlock']]:!bg-white/5 [&_pre]:!bg-black/5 dark:[&_pre]:!bg-white/5";
+      default:
+        return "[&_.bn-editor]:!bg-background [&_.bn-block-content]:!bg-background [&_[data-node-type='codeBlock']]:!bg-secondary [&_pre]:!bg-secondary";
+    }
+  };
+
   // Renders the editor instance using a React component.
   return (
     <div
-      className={`max-w-5xl mx-auto p-2 md:p-4 [&_.bn-editor]:!pt-16 [&_.bn-editor]:!pb-100 
-        [&_[data-node-type='codeBlock']]:!text-foreground [&_pre]:!text-foreground [&_[data-node-type='codeBlock']]:!rounded-md [&_pre]:!rounded-md 
-        [&_.bn-editor]:!border [&_.bn-editor]:!border-transparent [&_.bn-editor]:hover:!border-dashed [&_.bn-editor]:hover:!border-border 
-        ${
-          isMuted
-            ? "[&_.bn-editor]:!bg-secondary [&_.bn-block-content]:!bg-secondary [&_[data-node-type='codeBlock']]:!bg-background [&_pre]:!bg-background"
-            : "[&_.bn-editor]:!bg-background [&_.bn-block-content]:!bg-background [&_[data-node-type='codeBlock']]:!bg-secondary [&_pre]:!bg-secondary"
-        }`}
+      className={`max-w-5xl mx-auto p-2 md:p-4 [&_.bn-editor]:!pt-16 [&_.bn-editor]:!pb-100
+        [&_[data-node-type='codeBlock']]:!text-foreground [&_pre]:!text-foreground [&_[data-node-type='codeBlock']]:!rounded-md [&_pre]:!rounded-md
+        ${backgroundMode === "glass"
+          ? "[&_.bn-editor]:!border [&_.bn-editor]:!border-solid"
+          : "[&_.bn-editor]:!border [&_.bn-editor]:!border-transparent [&_.bn-editor]:hover:!border-dashed [&_.bn-editor]:hover:!border-border"}
+        ${getBackgroundClasses()}`}
     >
       <BlockNoteView
         editor={editor}

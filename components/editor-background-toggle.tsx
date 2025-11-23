@@ -1,8 +1,12 @@
 "use client";
 
-import { Square, SquareDashed } from "lucide-react";
+import { Square, SquareDashed, Blend } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { toggleMuted } from "@/lib/features/editor/editorSlice";
+import {
+  cycleBackgroundMode,
+  setBackgroundMode,
+  EditorBackgroundMode,
+} from "@/lib/features/editor/editorSlice";
 
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
@@ -10,27 +14,31 @@ import { toast } from "sonner";
 
 export function EditorBackgroundToggle() {
   const dispatch = useAppDispatch();
-  const isMuted = useAppSelector((state) => state.editor.isMuted);
+  const backgroundMode = useAppSelector((state) => state.editor.backgroundMode);
 
   useEffect(() => {
     const stored = localStorage.getItem("editor-background");
-    if (stored !== null) {
-      const isStoredMuted = stored === "muted";
-      if (isStoredMuted !== isMuted) {
-        dispatch(toggleMuted());
+    if (stored !== null && ["default", "muted", "glass"].includes(stored)) {
+      if (stored !== backgroundMode) {
+        dispatch(setBackgroundMode(stored as EditorBackgroundMode));
       }
     }
-  }, [dispatch, isMuted]);
+  }, [dispatch, backgroundMode]);
 
   const handleToggle = () => {
-    dispatch(toggleMuted());
-    const newState = !isMuted;
-    localStorage.setItem("editor-background", newState ? "muted" : "default");
-    toast.success(
-      newState
-        ? "Switched to muted background"
-        : "Switched to default background"
-    );
+    const modes: EditorBackgroundMode[] = ["default", "muted", "glass"];
+    const currentIndex = modes.indexOf(backgroundMode);
+    const newMode = modes[(currentIndex + 1) % modes.length];
+
+    dispatch(cycleBackgroundMode());
+    localStorage.setItem("editor-background", newMode);
+
+    const messages = {
+      default: "Default background",
+      muted: "Muted background",
+      glass: "Liquid glass background",
+    };
+    toast.success(messages[newMode]);
   };
 
   return (
@@ -40,13 +48,26 @@ export function EditorBackgroundToggle() {
       onClick={handleToggle}
       className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
     >
-      <SquareDashed
-        className="scale-100 rotate-0 transition-all data-[muted=true]:scale-0 data-[muted=true]:-rotate-90"
-        data-muted={isMuted}
-      />
       <Square
-        className="absolute scale-0 rotate-90 transition-all data-[muted=true]:scale-100 data-[muted=true]:rotate-0"
-        data-muted={isMuted}
+        className="absolute transition-all duration-300"
+        style={{
+          transform: backgroundMode === "default" ? "scale(1) rotate(0deg)" : "scale(0) rotate(-90deg)",
+          opacity: backgroundMode === "default" ? 1 : 0,
+        }}
+      />
+      <SquareDashed
+        className="absolute transition-all duration-300"
+        style={{
+          transform: backgroundMode === "muted" ? "scale(1) rotate(0deg)" : "scale(0) rotate(90deg)",
+          opacity: backgroundMode === "muted" ? 1 : 0,
+        }}
+      />
+      <Blend
+        className="absolute transition-all duration-300"
+        style={{
+          transform: backgroundMode === "glass" ? "scale(1) rotate(0deg)" : "scale(0) rotate(90deg)",
+          opacity: backgroundMode === "glass" ? 1 : 0,
+        }}
       />
       <span className="sr-only">Toggle editor background</span>
     </Button>
