@@ -121,6 +121,21 @@
   body {
     @apply bg-background text-foreground;
   }
+  body.show-grid {
+    background-image:
+      linear-gradient(to right, oklch(0 0 0 / 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(0 0 0 / 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .dark body.show-grid {
+    background-image:
+      linear-gradient(to right, oklch(1 0 0 / 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(1 0 0 / 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  body.hide-grid {
+    background-image: none;
+  }
 
   /* Disable default scrollbar - temporarily disabled for native scrollbar */
   /* * {

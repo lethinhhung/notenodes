@@ -2,6 +2,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 // import { LanguageToggle } from "@/components/language-toggle";
 import { Editor } from "@/components/dynamic-editor";
 import { EditorBackgroundToggle } from "@/components/editor-background-toggle";
+import { GridToggle } from "@/components/grid-toggle";
 import { CopyButton } from "@/components/copy-button";
 import { DownloadButton } from "@/components/download-button";
 import { ImportButton } from "@/components/import-button";
@@ -16,6 +17,7 @@ export default async function Home() {
           <ImportButton />
           <CopyButton />
           <DownloadButton />
+          <GridToggle />
           <EditorBackgroundToggle />
           <ModeToggle />
           {/* <LanguageToggle /> */}
