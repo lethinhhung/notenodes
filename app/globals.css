@@ -121,6 +121,18 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Prevent scroll chaining when BlockNote suggestion menu is open */
+  .bn-suggestion-menu,
+  .bn-grid-suggestion-menu {
+    overscroll-behavior: contain;
+  }
+
+  /* Prevent parent scroll when suggestion menu scrollIntoView is called */
+  .bn-suggestion-menu [role="option"],
+  .bn-grid-suggestion-menu [role="option"] {
+    scroll-margin: 8px;
+  }
   body.grid-normal {
     background-image:
       linear-gradient(to right, oklch(0 0 0 / 0.08) 1px, transparent 1px),

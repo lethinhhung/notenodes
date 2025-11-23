@@ -6,7 +6,7 @@ import "@blocknote/shadcn/style.css";
 import { useTheme } from "next-themes";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { setContent } from "@/lib/features/editor/editorSlice";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useCallback } from "react";
 
 // Our <Editor> component we can reuse later
 export default function Editor() {
@@ -75,7 +75,67 @@ export default function Editor() {
     }
   }, [editor, reduxContent]);
 
-  const getBackgroundClasses = () => {
+  // Prevent page scroll when navigating slash menu with arrow keys
+  useEffect(() => {
+    let isMenuOpen = false;
+    let scrollLocked = false;
+    let lastScrollTop = 0;
+
+    const getScrollContainer = () =>
+      document.querySelector('.h-screen.overflow-auto') as HTMLElement | null;
+
+    const checkMenuOpen = () => {
+      const menu = document.querySelector('.bn-suggestion-menu, .bn-grid-suggestion-menu');
+      return !!menu;
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      isMenuOpen = checkMenuOpen();
+
+      if (isMenuOpen && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+        const container = getScrollContainer();
+        if (container) {
+          lastScrollTop = container.scrollTop;
+          scrollLocked = true;
+        }
+      }
+    };
+
+    const handleScroll = (e: Event) => {
+      if (scrollLocked) {
+        const container = e.target as HTMLElement;
+        container.scrollTop = lastScrollTop;
+        scrollLocked = false;
+      }
+    };
+
+    // Observe DOM changes to detect when suggestion menu opens/closes
+    const observer = new MutationObserver(() => {
+      isMenuOpen = checkMenuOpen();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    window.addEventListener("keydown", handleKeyDown, { capture: true });
+
+    const container = getScrollContainer();
+    if (container) {
+      container.addEventListener("scroll", handleScroll, { passive: false });
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown, { capture: true });
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
+      observer.disconnect();
+    };
+  }, []);
+
+  const getBackgroundClasses = useCallback(() => {
     switch (backgroundMode) {
       case "muted":
         return "[&_.bn-editor]:!bg-secondary [&_.bn-block-content]:!bg-secondary [&_[data-node-type='codeBlock']]:!bg-background [&_pre]:!bg-background";
@@ -84,7 +144,7 @@ export default function Editor() {
       default:
         return "[&_.bn-editor]:!bg-background [&_.bn-block-content]:!bg-background [&_[data-node-type='codeBlock']]:!bg-secondary [&_pre]:!bg-secondary";
     }
-  };
+  }, [backgroundMode]);
 
   // Renders the editor instance using a React component.
   return (
