@@ -4,6 +4,11 @@ import { Moon, Sun, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -28,39 +33,55 @@ export function ModeToggle() {
     }
   };
 
+  const getTooltipText = () => {
+    if (theme === "light") return "Light mode";
+    if (theme === "dark") return "Dark mode";
+    return "System theme";
+  };
+
   if (!mounted) {
     return (
-      <Button
-        variant="outline"
-        size="icon"
-        className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
-      >
-        <Sun className="scale-100 rotate-0 transition-all" />
-        <span className="sr-only">Toggle theme</span>
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
+          >
+            <Sun className="scale-100 rotate-0 transition-all" />
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Toggle theme</TooltipContent>
+      </Tooltip>
     );
   }
 
   return (
-    <Button
-      variant="outline"
-      size="icon"
-      onClick={toggleTheme}
-      className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
-    >
-      <Sun
-        className="scale-100 rotate-0 transition-all data-[theme=dark]:scale-0 data-[theme=dark]:-rotate-90 data-[theme=system]:scale-0 data-[theme=system]:-rotate-90"
-        data-theme={theme}
-      />
-      <Moon
-        className="absolute scale-0 rotate-90 transition-all data-[theme=dark]:scale-100 data-[theme=dark]:rotate-0 data-[theme=light]:scale-0 data-[theme=light]:rotate-90 data-[theme=system]:scale-0 data-[theme=system]:rotate-90"
-        data-theme={theme}
-      />
-      <SunMoon
-        className="absolute scale-0 rotate-90 transition-all data-[theme=system]:scale-100 data-[theme=system]:rotate-0 data-[theme=light]:scale-0 data-[theme=light]:rotate-90 data-[theme=dark]:scale-0 data-[theme=dark]:rotate-90"
-        data-theme={theme}
-      />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={toggleTheme}
+          className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
+        >
+          <Sun
+            className="scale-100 rotate-0 transition-all data-[theme=dark]:scale-0 data-[theme=dark]:-rotate-90 data-[theme=system]:scale-0 data-[theme=system]:-rotate-90"
+            data-theme={theme}
+          />
+          <Moon
+            className="absolute scale-0 rotate-90 transition-all data-[theme=dark]:scale-100 data-[theme=dark]:rotate-0 data-[theme=light]:scale-0 data-[theme=light]:rotate-90 data-[theme=system]:scale-0 data-[theme=system]:rotate-90"
+            data-theme={theme}
+          />
+          <SunMoon
+            className="absolute scale-0 rotate-90 transition-all data-[theme=system]:scale-100 data-[theme=system]:rotate-0 data-[theme=light]:scale-0 data-[theme=light]:rotate-90 data-[theme=dark]:scale-0 data-[theme=dark]:rotate-90"
+            data-theme={theme}
+          />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>{getTooltipText()}</TooltipContent>
+    </Tooltip>
   );
 }

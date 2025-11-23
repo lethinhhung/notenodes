@@ -9,20 +9,28 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function TechStackInfo() {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
-        >
-          <Info />
-          <span className="sr-only">Tech stack information</span>
-        </Button>
-      </DialogTrigger>
+    <Tooltip>
+      <Dialog>
+        <TooltipTrigger asChild>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
+            >
+              <Info />
+              <span className="sr-only">Tech stack information</span>
+            </Button>
+          </DialogTrigger>
+        </TooltipTrigger>
       <DialogContent className="sm:max-w-[500px] bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg rounded-3xl">
         <DialogHeader>
           <DialogTitle>About this project</DialogTitle>
@@ -60,6 +68,8 @@ export function TechStackInfo() {
           </div>
         </div>
       </DialogContent>
-    </Dialog>
+      </Dialog>
+      <TooltipContent>About this project</TooltipContent>
+    </Tooltip>
   );
 }

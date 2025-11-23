@@ -9,6 +9,11 @@ import {
 } from "@/lib/features/editor/editorSlice";
 
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -41,35 +46,46 @@ export function EditorBackgroundToggle() {
     toast.success(messages[newMode]);
   };
 
+  const getTooltipText = () => {
+    if (backgroundMode === "default") return "Background: Default";
+    if (backgroundMode === "muted") return "Background: Muted";
+    return "Background: Glass";
+  };
+
   return (
-    <Button
-      variant="outline"
-      size="icon"
-      onClick={handleToggle}
-      className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
-    >
-      <Square
-        className="absolute transition-all duration-300"
-        style={{
-          transform: backgroundMode === "default" ? "scale(1) rotate(0deg)" : "scale(0) rotate(-90deg)",
-          opacity: backgroundMode === "default" ? 1 : 0,
-        }}
-      />
-      <SquareDashed
-        className="absolute transition-all duration-300"
-        style={{
-          transform: backgroundMode === "muted" ? "scale(1) rotate(0deg)" : "scale(0) rotate(90deg)",
-          opacity: backgroundMode === "muted" ? 1 : 0,
-        }}
-      />
-      <Blend
-        className="absolute transition-all duration-300"
-        style={{
-          transform: backgroundMode === "glass" ? "scale(1) rotate(0deg)" : "scale(0) rotate(90deg)",
-          opacity: backgroundMode === "glass" ? 1 : 0,
-        }}
-      />
-      <span className="sr-only">Toggle editor background</span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={handleToggle}
+          className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
+        >
+          <Square
+            className="absolute transition-all duration-300"
+            style={{
+              transform: backgroundMode === "default" ? "scale(1) rotate(0deg)" : "scale(0) rotate(-90deg)",
+              opacity: backgroundMode === "default" ? 1 : 0,
+            }}
+          />
+          <SquareDashed
+            className="absolute transition-all duration-300"
+            style={{
+              transform: backgroundMode === "muted" ? "scale(1) rotate(0deg)" : "scale(0) rotate(90deg)",
+              opacity: backgroundMode === "muted" ? 1 : 0,
+            }}
+          />
+          <Blend
+            className="absolute transition-all duration-300"
+            style={{
+              transform: backgroundMode === "glass" ? "scale(1) rotate(0deg)" : "scale(0) rotate(90deg)",
+              opacity: backgroundMode === "glass" ? 1 : 0,
+            }}
+          />
+          <span className="sr-only">Toggle editor background</span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>{getTooltipText()}</TooltipContent>
+    </Tooltip>
   );
 }

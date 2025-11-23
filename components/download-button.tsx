@@ -8,6 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useAppSelector } from "@/lib/hooks";
 import {
   blocksToMarkdown,
@@ -73,31 +78,36 @@ export function DownloadButton() {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
-        >
-          <Upload />
-          <span className="sr-only">Download content</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => handleExport("markdown")}>
-          Download Markdown
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleExport("html")}>
-          Download HTML
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleExport("text")}>
-          Download Text
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleExport("json")}>
-          Download JSON
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Tooltip>
+      <DropdownMenu>
+        <TooltipTrigger asChild>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
+            >
+              <Upload />
+              <span className="sr-only">Download content</span>
+            </Button>
+          </DropdownMenuTrigger>
+        </TooltipTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => handleExport("markdown")}>
+            Download Markdown
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleExport("html")}>
+            Download HTML
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleExport("text")}>
+            Download Text
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleExport("json")}>
+            Download JSON
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <TooltipContent>Download content</TooltipContent>
+    </Tooltip>
   );
 }

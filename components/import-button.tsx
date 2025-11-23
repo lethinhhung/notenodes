@@ -16,6 +16,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setContent } from "@/lib/features/editor/editorSlice";
 import {
@@ -175,32 +180,37 @@ export function ImportButton() {
         accept=".json,.md,.markdown,.html,.htm,.txt"
       />
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
-          >
-            <Download />
-            <span className="sr-only">Import content</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => handleFileSelect("markdown")}>
-            Import Markdown
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFileSelect("html")}>
-            Import HTML
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFileSelect("text")}>
-            Import Text
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFileSelect("json")}>
-            Import JSON
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Tooltip>
+        <DropdownMenu>
+          <TooltipTrigger asChild>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
+              >
+                <Download />
+                <span className="sr-only">Import content</span>
+              </Button>
+            </DropdownMenuTrigger>
+          </TooltipTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => handleFileSelect("markdown")}>
+              Import Markdown
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleFileSelect("html")}>
+              Import HTML
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleFileSelect("text")}>
+              Import Text
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleFileSelect("json")}>
+              Import JSON
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <TooltipContent>Import content</TooltipContent>
+      </Tooltip>
 
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <DialogContent>

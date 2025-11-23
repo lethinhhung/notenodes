@@ -11,6 +11,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { languages } from "@/lib/i18n/settings";
 
 const languageNames: Record<string, string> = {
@@ -30,28 +35,33 @@ export function LanguageToggle() {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="!bg-background shadow-md"
-        >
-          <Languages />
-          <span className="sr-only">Toggle language</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        {languages.map((locale) => (
-          <DropdownMenuItem
-            key={locale}
-            onClick={() => switchLanguage(locale)}
-            className={currentLocale === locale ? "bg-accent" : ""}
-          >
-            {languageNames[locale]}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Tooltip>
+      <DropdownMenu>
+        <TooltipTrigger asChild>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="!bg-background shadow-md"
+            >
+              <Languages />
+              <span className="sr-only">Toggle language</span>
+            </Button>
+          </DropdownMenuTrigger>
+        </TooltipTrigger>
+        <DropdownMenuContent align="end">
+          {languages.map((locale) => (
+            <DropdownMenuItem
+              key={locale}
+              onClick={() => switchLanguage(locale)}
+              className={currentLocale === locale ? "bg-accent" : ""}
+            >
+              {languageNames[locale]}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <TooltipContent>Change language</TooltipContent>
+    </Tooltip>
   );
 }

@@ -8,6 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useAppSelector } from "@/lib/hooks";
 import {
   blocksToMarkdown,
@@ -51,31 +56,36 @@ export function CopyButton() {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
-        >
-          <Copy />
-          <span className="sr-only">Copy content</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => handleCopy("markdown")}>
-          Copy as Markdown
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleCopy("html")}>
-          Copy as HTML
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleCopy("text")}>
-          Copy as Text
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleCopy("json")}>
-          Copy as JSON
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Tooltip>
+      <DropdownMenu>
+        <TooltipTrigger asChild>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg hover:bg-black/20 dark:hover:bg-white/20 hover:shadow-xl hover:border-transparent active:scale-95 transition-all duration-300 ease-out h-12 w-12 [&_svg]:!size-5"
+            >
+              <Copy />
+              <span className="sr-only">Copy content</span>
+            </Button>
+          </DropdownMenuTrigger>
+        </TooltipTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => handleCopy("markdown")}>
+            Copy as Markdown
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleCopy("html")}>
+            Copy as HTML
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleCopy("text")}>
+            Copy as Text
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleCopy("json")}>
+            Copy as JSON
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <TooltipContent>Copy content</TooltipContent>
+    </Tooltip>
   );
 }
