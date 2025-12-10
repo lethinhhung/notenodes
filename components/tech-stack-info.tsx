@@ -31,7 +31,7 @@ export function TechStackInfo() {
             </Button>
           </DialogTrigger>
         </TooltipTrigger>
-      <DialogContent className="sm:max-w-[500px] bg-black/5 dark:bg-white/5 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg rounded-3xl">
+      <DialogContent className="sm:max-w-[500px] bg-white/80 dark:bg-black/80 backdrop-blur-xl border-black/10 dark:border-white/10 shadow-lg rounded-3xl">
         <DialogHeader>
           <DialogTitle>About this project</DialogTitle>
         </DialogHeader>
