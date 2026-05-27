@@ -17,11 +17,42 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const BASE_URL = "https://notenodes.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Note Nodes",
-  description: "A note-taking app",
+  metadataBase: new URL(BASE_URL),
+  title: "NoteNodes — Quick Markdown Editor",
+  description:
+    "A fast, lightweight markdown editor with block-based architecture, instant auto-save, and one-click export to Markdown, HTML, and JSON.",
+  keywords: [
+    "markdown editor",
+    "note-taking",
+    "block editor",
+    "auto-save",
+    "lightweight editor",
+    "markdown export",
+  ],
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>",
+  },
+  openGraph: {
+    title: "NoteNodes — Quick Markdown Editor",
+    description:
+      "A fast, lightweight markdown editor with block-based architecture, instant auto-save, and one-click export to Markdown, HTML, and JSON.",
+    url: BASE_URL,
+    siteName: "NoteNodes",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NoteNodes — Quick Markdown Editor",
+    description:
+      "A fast, lightweight markdown editor with block-based architecture, instant auto-save, and one-click export to Markdown, HTML, and JSON.",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
