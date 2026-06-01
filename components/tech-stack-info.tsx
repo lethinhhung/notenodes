@@ -66,6 +66,19 @@ export function TechStackInfo() {
               <li>Export to Markdown, HTML, JSON</li>
             </ul>
           </div>
+          <div className="border-t border-black/10 dark:border-white/10 pt-4">
+            <p className="text-sm text-muted-foreground">
+              Made by{" "}
+              <a
+                href="https://thinghunggg.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:text-foreground transition-colors"
+              >
+                thinghunggg
+              </a>
+            </p>
+          </div>
         </div>
       </DialogContent>
       </Dialog>
