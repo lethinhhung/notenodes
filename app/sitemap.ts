@@ -1,20 +1,14 @@
 import type { MetadataRoute } from "next";
+import { languages } from "@/lib/i18n/settings";
+import { localeUrl } from "@/lib/site";
 
-const baseUrl = "https://notenodes.vercel.app";
-
+// One entry per locale: middleware redirects the bare origin to one of these,
+// so there is no unprefixed URL worth listing.
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: `${baseUrl}/en`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/vi`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
-    },
-  ];
+  return languages.map((locale) => ({
+    url: localeUrl(locale),
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 1,
+  }));
 }
